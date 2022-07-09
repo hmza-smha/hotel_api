@@ -1,4 +1,6 @@
 using hotel_api.Data;
+using hotel_api.Services;
+using hotel_api.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -38,6 +40,10 @@ namespace hotel_api
                 string connectionString = Configuration.GetConnectionString("DefaultConnection");
                 options.UseSqlServer(connectionString);
             });
+
+            services.AddTransient<IHotel, HotelService>();
+            services.AddTransient<IRoom, RoomService>();
+            services.AddTransient<IAmenity, AmenityService>();
 
         }
 
