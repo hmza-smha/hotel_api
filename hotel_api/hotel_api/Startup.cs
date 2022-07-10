@@ -3,6 +3,7 @@ using hotel_api.Services;
 using hotel_api.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -64,6 +65,10 @@ namespace hotel_api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Welcome To Hotel RESTfull API!");
+                });
             });
         }
     }

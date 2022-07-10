@@ -12,8 +12,8 @@ namespace hotel_api.Services.Interfaces
 
         Task Delete(int id);
 
-        Task<Amenity> GetRoom(int id);
+        Task<Amenity> GetAmenity(int id);
 
-        Task<List<Amenity>> GetRooms();
+        Task<List<Amenity>> GetAmenities();
     }
 }
