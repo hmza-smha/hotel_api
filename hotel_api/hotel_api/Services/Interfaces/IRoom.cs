@@ -8,11 +8,11 @@ namespace hotel_api.Services.Interfaces
     {
         Task<Room> Create(Room room);
 
-        Task<Room> Update(int id, Room room);
+        Task<Room> Update(int hotelId, int roomNumber, Room room);
 
-        Task Delete(int id);
+        Task Delete(int hotelId, int roomNumber);
 
-        Task<Room> GetRoom(int id);
+        Task<Room> GetRoom(int hotelId, int roomNumber);
 
         Task<List<Room>> GetRooms();
     }

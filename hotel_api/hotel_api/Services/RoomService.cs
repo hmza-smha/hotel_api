@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 
 namespace hotel_api.Services
 {
@@ -19,21 +20,28 @@ namespace hotel_api.Services
 
         public async Task<Room> Create(Room room)
         {
+            if (IsExist(room.RoomNumber, room.HotelId))
+                    throw new Exception("Simmilar Room Exists!");
+
             _context.Entry(room).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return room;
         }
 
-        public async Task Delete(int id)
+        public async Task Delete(int roomNumber, int hotelId)
         {
-            Room room = await _context.Rooms.FindAsync(id);
+            if (!IsExist(roomNumber, hotelId))
+                throw new Exception("Room Does not Exists!");
+
+            Room room = await _context.Rooms.FindAsync(hotelId, roomNumber);
             _context.Entry(room).State = EntityState.Deleted;
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Room> GetRoom(int id)
+        public async Task<Room> GetRoom(int roomNumber, int hotelId)
         {
-            return await _context.Rooms.FindAsync(id);
+            // PKs should be ordered as in the table
+            return await _context.Rooms.FindAsync(hotelId, roomNumber);
         }
 
         public async Task<List<Room>> GetRooms()
@@ -41,17 +49,20 @@ namespace hotel_api.Services
             return await _context.Rooms.ToListAsync();
         }
 
-        public async Task<Room> Update(int id, Room room)
+        public async Task<Room> Update(int roomNumber, int hotelId, Room room)
         {
-            Room roomInDb = await _context.Rooms.FindAsync(id);
-
-            if (roomInDb == null)
-                throw new Exception("Room Does not exist");
+            if (!IsExist(roomNumber, hotelId))
+                throw new Exception("Room Does not Exist!");
 
             _context.Entry(room).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return await _context.Rooms.FindAsync(id);
+            return await _context.Rooms.FindAsync(hotelId, roomNumber);
+        }
+
+        private bool IsExist(int roomNumber, int hotelId)
+        {
+            return _context.Rooms.Any(x => x.HotelId == hotelId && x.RoomNumber == roomNumber);
         }
     }
 }
