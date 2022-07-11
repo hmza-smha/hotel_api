@@ -56,8 +56,8 @@ namespace hotel_api.Services
                 .Include(x => x.Rooms)
                 .ThenInclude(x => x.RoomAmenities)
                 .ThenInclude(x => x.Amenity)
-                .Include(x => x.Rooms)
-                .ThenInclude(x => x.Custumer)
+                //.Include(x => x.Rooms)
+                //.ThenInclude(x => x.Custumer)
                 .FirstOrDefaultAsync();
         }
 
@@ -67,8 +67,8 @@ namespace hotel_api.Services
                 .Include(x => x.Rooms)
                 .ThenInclude(x => x.RoomAmenities)
                 .ThenInclude(x => x.Amenity)
-                .Include(x=> x.Rooms)
-                .ThenInclude(x => x.Custumer)
+                //.Include(x=> x.Rooms)
+                //.ThenInclude(x => x.Custumer)
                 .ToListAsync();
         }
 

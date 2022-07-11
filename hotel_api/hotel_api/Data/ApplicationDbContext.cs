@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace hotel_api.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : DbContext
     {
+        public DbSet<User> Users { get; set; }
+
         public DbSet<Hotel> Hotels { get; set; }
 
         public DbSet<Room> Rooms { get; set; }
@@ -23,8 +25,6 @@ namespace hotel_api.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-
             modelBuilder.Entity<Room>().HasKey(
                 x => new { x.HotelId, x.RoomNumber }
             );
@@ -55,38 +55,38 @@ namespace hotel_api.Data
             );
 
 
-            // any unique string id
-            const string ADMIN_ID = "a18be9c0";
-            const string ADMIN_ROLE_ID = "ad376a8f";
+            //// any unique string id
+            //const string ADMIN_ID = "a18be9c0";
+            //const string ADMIN_ROLE_ID = "ad376a8f";
 
-            // create an Admin role
-            modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
-            {
-                Id = ADMIN_ROLE_ID,
-                Name = "Admin",
-                NormalizedName = "Admin"
-            });
+            //// create an Admin role
+            //modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
+            //{
+            //    Id = ADMIN_ROLE_ID,
+            //    Name = "Admin",
+            //    NormalizedName = "Admin"
+            //});
 
-            // create a User
-            var hasher = new PasswordHasher<ApplicationUser>();
-            modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
-            {
-                Id = ADMIN_ID,
-                UserName = "Admin",
-                NormalizedUserName = "admin",
-                Email = "admin@gmail.com",
-                NormalizedEmail = "admin@gmail.com",
-                EmailConfirmed = false,
-                PasswordHash = hasher.HashPassword(null, "Admin123#"),
-                SecurityStamp = string.Empty
-            });
+            //// create a User
+            //var hasher = new PasswordHasher<ApplicationUser>();
+            //modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
+            //{
+            //    Id = ADMIN_ID,
+            //    UserName = "Admin",
+            //    NormalizedUserName = "admin",
+            //    Email = "admin@gmail.com",
+            //    NormalizedEmail = "admin@gmail.com",
+            //    EmailConfirmed = false,
+            //    PasswordHash = hasher.HashPassword(null, "Admin123#"),
+            //    SecurityStamp = string.Empty
+            //});
 
-            // assign that user to the admin role
-            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
-            {
-                RoleId = ADMIN_ROLE_ID,
-                UserId = ADMIN_ID
-            });
+            //// assign that user to the admin role
+            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            //{
+            //    RoleId = ADMIN_ROLE_ID,
+            //    UserId = ADMIN_ID
+            //});
 
         }
     }
