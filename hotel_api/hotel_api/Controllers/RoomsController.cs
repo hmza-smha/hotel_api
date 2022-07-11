@@ -65,6 +65,34 @@ namespace hotel_api.Controllers
             }
         }
 
+        [HttpPost("{roomNumber}/Hotel/{hotelId}/Amenity/{amenityId}")]
+        public async Task<ActionResult> AddAmenityToRoom(int roomNumber, int hotelId, int amenityId)
+        {
+            try
+            {
+                await _room.AddAmenityToRoom(roomNumber, hotelId, amenityId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Content(e.Message);
+            }
+        }
+
+        [HttpDelete("{roomNumber}/Hotel/{hotelId}/Amenity/{amenityId}")]
+        public async Task<ActionResult> RemoveAmenityFromRoom(int roomNumber, int hotelId, int amenityId)
+        {
+            try
+            {
+                await _room.RemoveAmenityFromRoom(roomNumber, hotelId, amenityId);
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return Content(e.Message);
+            }
+        }
+
         [HttpDelete("{roomNumber}/Hotel/{hotelId}")]
         public async Task<IActionResult> DeleteRoom(int roomNumber, int hotelId)
         {

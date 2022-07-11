@@ -61,9 +61,42 @@ namespace hotel_api.Services
             return room;
         }
 
+        public async Task<Room> AddAmenityToRoom(int roomNumber, int hotelId, int amenityId)
+        {
+            if (!IsExist(roomNumber, hotelId))
+                throw new Exception("Room Does not Exist!");
+
+            if (!_context.Amenities.Any(x => x.Id == amenityId))
+                throw new Exception("Amenity Does not Exist!");
+
+            var roomAmenity = new RoomAmenity
+            {
+                HotelId = hotelId,
+                RoomNumber = roomNumber,
+                AmenityId = amenityId
+            };
+
+            _context.Entry(roomAmenity).State = EntityState.Added;
+
+            await _context.SaveChangesAsync();
+
+            return await _context.Rooms.FindAsync(hotelId, roomNumber);
+        }
+        public async Task RemoveAmenityFromRoom(int roomNumber, int hotelId, int amenityId)
+        {
+            RoomAmenity roomAmenity = await _context.RoomAmenities.FindAsync(hotelId, amenityId, roomNumber);
+
+            if (roomAmenity == null)
+                throw new Exception("Amenity Does not Exists!");
+
+            _context.Entry(roomAmenity).State = EntityState.Deleted;
+            await _context.SaveChangesAsync();
+        }
+
         private bool IsExist(int roomNumber, int hotelId)
         {
             return _context.Rooms.Any(x => x.HotelId == hotelId && x.RoomNumber == roomNumber);
         }
+
     }
 }
