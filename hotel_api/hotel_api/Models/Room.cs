@@ -27,6 +27,6 @@ namespace hotel_api.Models
 
         public ApplicationUser Custumer { get; set; }
 
-        public List<Amenity> Amenities { get; set; }
+        public List<RoomAmenity> RoomAmenities { get; set; }
     }
 }

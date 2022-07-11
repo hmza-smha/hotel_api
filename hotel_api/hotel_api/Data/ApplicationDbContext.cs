@@ -13,6 +13,8 @@ namespace hotel_api.Data
 
         public DbSet<Amenity> Amenities { get; set; }
 
+        public DbSet<RoomAmenity> RoomAmenities { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -23,8 +25,13 @@ namespace hotel_api.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Room>()
-                .HasKey(x => new { x.HotelId, x.RoomNumber });
+            modelBuilder.Entity<Room>().HasKey(
+                x => new { x.HotelId, x.RoomNumber }
+            );
+
+            modelBuilder.Entity<RoomAmenity>().HasKey(
+                x => new { x.RoomNumber, x.AmenityId, x.HotelId }
+            );
 
             modelBuilder.Entity<Hotel>().HasData(
               new Hotel { Id = 1, Name = "Async Inn", City = "Amman", Country = "Jordan", Phone = "06-485236", Status = "Available" },

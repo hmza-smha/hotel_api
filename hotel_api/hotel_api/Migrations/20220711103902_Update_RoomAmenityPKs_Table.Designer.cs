@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hotel_api.Data;
 
 namespace hotel_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220711103902_Update_RoomAmenityPKs_Table")]
+    partial class Update_RoomAmenityPKs_Table
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,7 +51,7 @@ namespace hotel_api.Migrations
                         new
                         {
                             Id = "ad376a8f",
-                            ConcurrencyStamp = "c9dedb13-758c-4b6b-bb3a-dd6c056a23a6",
+                            ConcurrencyStamp = "501de264-303a-4467-8a2c-96d8ab7d88a4",
                             Name = "Admin",
                             NormalizedName = "Admin"
                         });
@@ -268,13 +270,13 @@ namespace hotel_api.Migrations
                         {
                             Id = "a18be9c0",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5dcd141e-4a3a-49aa-8858-4dc615db056e",
+                            ConcurrencyStamp = "b5f8a955-0c38-4819-8aa0-b24a3b8f67bc",
                             Email = "admin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "admin@gmail.com",
                             NormalizedUserName = "admin",
-                            PasswordHash = "AQAAAAEAACcQAAAAEABa14w4kxGPFzfW8mLek54fcmGSjN2UesljnILSi21BKZuFCRkLvo8P7nailiqt5A==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIPEcUqBQo3VsQ9uVKPcMU/T0ysEGx3Xe5BP9I+1zK3Qj/3ldhxhX7PI7zp74jYgKg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "",
                             TwoFactorEnabled = false,
@@ -418,6 +420,12 @@ namespace hotel_api.Migrations
                     b.Property<int>("HotelId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("RoomHotelId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RoomNumber1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
@@ -425,7 +433,7 @@ namespace hotel_api.Migrations
 
                     b.HasIndex("AmenityId");
 
-                    b.HasIndex("HotelId", "RoomNumber");
+                    b.HasIndex("RoomHotelId", "RoomNumber1");
 
                     b.ToTable("RoomAmenities");
                 });
@@ -508,9 +516,7 @@ namespace hotel_api.Migrations
 
                     b.HasOne("hotel_api.Models.Room", "Room")
                         .WithMany("Amenities")
-                        .HasForeignKey("HotelId", "RoomNumber")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RoomHotelId", "RoomNumber1");
 
                     b.Navigation("Amenity");
 

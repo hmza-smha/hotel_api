@@ -20,10 +20,10 @@ namespace hotel_api.Controllers
             _room = room;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<Room>>> GetRooms()
+        [HttpGet("{hotelId}")]
+        public async Task<ActionResult<List<Room>>> GetRooms(int hotelId)
         {
-            return Ok(await _room.GetRooms());
+            return Ok(await _room.GetRooms(hotelId));
         }
 
         [HttpGet("{roomNumber}/Hotel/{hotelId}")]

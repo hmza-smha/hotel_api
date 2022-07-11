@@ -44,9 +44,10 @@ namespace hotel_api.Services
             return await _context.Rooms.FindAsync(hotelId, roomNumber);
         }
 
-        public async Task<List<Room>> GetRooms()
+        public async Task<List<Room>> GetRooms(int hotelId)
         {
-            return await _context.Rooms.ToListAsync();
+            List<Room> rooms = await _context.Rooms.Where(x => x.HotelId == hotelId).ToListAsync();
+            return rooms;
         }
 
         public async Task<Room> Update(int roomNumber, int hotelId, Room room)
@@ -57,7 +58,7 @@ namespace hotel_api.Services
             _context.Entry(room).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return await _context.Rooms.FindAsync(hotelId, roomNumber);
+            return room;
         }
 
         private bool IsExist(int roomNumber, int hotelId)

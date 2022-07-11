@@ -15,5 +15,7 @@ namespace hotel_api.Services.Interfaces
         Task<List<Hotel>> GetHotels();
 
         Task<Hotel> GetHotel(int id);
+
+        Task<List<Room>> GetAvailable(int id);
     }
 }

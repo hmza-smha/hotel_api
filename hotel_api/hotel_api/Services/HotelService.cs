@@ -38,14 +38,37 @@ namespace hotel_api.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Room>> GetAvailable(int id)
+        {
+            List<Room> roomList = await _context.Rooms
+                .Where(x => x.HotelId == id && x.Status == "Available")
+                .Include(x => x.RoomAmenities)
+                .ThenInclude(x => x.Amenity)
+                .ToListAsync();
+
+            return roomList;
+        }
+
         public async Task<Hotel> GetHotel(int id)
         {
-            return await _context.Hotels.FindAsync(id);
+            return await _context.Hotels
+                .Include(x => x.Rooms)
+                .ThenInclude(x => x.RoomAmenities)
+                .ThenInclude(x => x.Amenity)
+                .Include(x => x.Rooms)
+                .ThenInclude(x => x.Custumer)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<Hotel>> GetHotels()
         {
-            return await _context.Hotels.ToListAsync();
+            return await _context.Hotels
+                .Include(x => x.Rooms)
+                .ThenInclude(x => x.RoomAmenities)
+                .ThenInclude(x => x.Amenity)
+                .Include(x=> x.Rooms)
+                .ThenInclude(x => x.Custumer)
+                .ToListAsync();
         }
 
         public async Task<Hotel> Update(int id, Hotel hotel)
@@ -56,7 +79,7 @@ namespace hotel_api.Services
             _context.Entry(hotel).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return await _context.Hotels.FindAsync(id);
+            return hotel;
         }
 
         private bool IsExist(int id)
