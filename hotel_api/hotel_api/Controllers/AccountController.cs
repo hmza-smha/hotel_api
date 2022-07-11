@@ -1,7 +1,18 @@
 ﻿
+using hotel_api.Data;
+using hotel_api.DTOs;
 using hotel_api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace hotel_api.Controllers
@@ -10,49 +21,105 @@ namespace hotel_api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        //private UserManager<ApplicationUser> _userManager;
-        //private SignInManager<ApplicationUser> _signInManager;
-        //private RoleManager<ApplicationUser> _roleManager;
+        // Access The appsettong.json
+        private IConfiguration _config;
+        private ApplicationDbContext _context;
 
-        //public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
-        //    RoleManager<ApplicationUser> roleManager)
-        //{
-        //    _userManager = userManager;
-        //    _signInManager = signInManager;
-        //    _roleManager = roleManager;
+        public AccountController(IConfiguration config, ApplicationDbContext context)
+        {
+            _config = config;
+            _context = context;
+        }
 
-        //}
-        //[HttpPost]
-        //public async Task<ApplicationUser> Register(ApplicationUser user)
-        //{
-        //    var user = new ApplicationUser
-        //    {
-        //        UserName = user.Username,
-        //        Email = user.Email
-        //    };
+        [HttpGet("Admins")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult AdminsEndpoints()
+        {
+            var curUser = GetCurrentUser();
 
-        //    var result = await _userManager.CreateAsync(user, user.Password);
+            return Ok($"Hi {curUser.Username}, you are {curUser.Role}");
+        }
 
-        //    if (result.Succeeded)
-        //    {
-        //        //await _userManager.AddToRoleAsync(user, "DistrictManager");
-        //        //await _userManager.AddToRoleAsync(user, "PropertyManager");
-        //        //await _userManager.AddToRoleAsync(user, "Agent");
-        //        return user;
-        //    }
-        //    else
-        //    {
-        //        foreach (var error in result.Errors)
-        //        {
-        //            var errorKey =
-        //                error.Code.Contains("Password") ? nameof(data.Password) :
-        //                error.Code.Contains("Email") ? nameof(data.Email) :
-        //                error.Code.Contains("UserName") ? nameof(data.Username) :
-        //                "";
-        //            modelState.AddModelError(errorKey, error.Description);
-        //        }
-        //        return null;
-        //    }
-        //}
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] User user)
+        {
+            _context.Entry(user).State = EntityState.Added;
+            await _context.SaveChangesAsync();
+            return Ok(user);
+        }
+
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody] LoginData userLogin)
+        {
+            User user = Authenticate(userLogin);
+
+            if (user != null)
+            {
+                var token = Generate(user);
+                return Ok(token);
+            }
+
+            return NotFound("User not found");
+        }
+
+        private string Generate(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+              _config["Jwt:Audience"],
+              claims,
+              expires: DateTime.Now.AddMinutes(15),
+              signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        private User Authenticate(LoginData userLogin)
+        {
+            //var currentUser = UserConstants.Users
+            //    .FirstOrDefault(o => o.Username.ToLower() == userLogin.Username.ToLower() && o.Password == userLogin.Password);
+
+
+            User currentUser = _context.Users
+                .Where(x => x.Username == userLogin.Username && x.Password == userLogin.Password)
+                .FirstOrDefault();
+
+            if (currentUser != null)
+            {
+                return currentUser;
+            }
+
+            return null;
+        }
+
+        private User GetCurrentUser()
+        {
+            //string username = HttpContext.User.Identity.Name;
+
+            //return _context.Users.Where(x => x.Username == username).FirstOrDefault();
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var userClaims = identity.Claims;
+
+                return new User
+                {
+                    Username = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Name)?.Value,
+                    Role = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Role)?.Value
+                };
+            }
+
+            return null;
+        }
     }
 }

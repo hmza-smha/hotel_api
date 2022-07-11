@@ -12,8 +12,8 @@ namespace hotel_api.Models
         // key 2
         public int RoomNumber { get; set; }
 
-        [ForeignKey("Custumer")]
-        public string CustomerId { get; set; }
+        //[ForeignKey("Custumer")]
+        //public string CustomerId { get; set; }
 
         public decimal? Rate { get; set; }
 
@@ -25,7 +25,7 @@ namespace hotel_api.Models
 
         public Hotel Hotel { get; set; }
 
-        public ApplicationUser Custumer { get; set; }
+        //public ApplicationUser Custumer { get; set; }
 
         public List<RoomAmenity> RoomAmenities { get; set; }
     }
