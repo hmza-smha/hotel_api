@@ -15,5 +15,9 @@ namespace hotel_api.Services.Interfaces
         Task<Room> GetRoom(int hotelId, int roomNumber);
 
         Task<List<Room>> GetRooms(int hotelId);
+
+        Task<Room> AddAmenityToRoom(int roomNumber, int hotelId, int amenityId);
+
+        Task RemoveAmenityFromRoom(int roomNumber, int hotelId, int amenityId);
     }
 }

@@ -52,6 +52,7 @@ namespace hotel_api.Services
         public async Task<Hotel> GetHotel(int id)
         {
             return await _context.Hotels
+                .Where(x => x.Id == id)
                 .Include(x => x.Rooms)
                 .ThenInclude(x => x.RoomAmenities)
                 .ThenInclude(x => x.Amenity)
