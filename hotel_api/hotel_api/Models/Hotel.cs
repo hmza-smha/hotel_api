@@ -19,5 +19,6 @@ namespace hotel_api.Models
         public string Phone { get; set; }
 
         public List<Room> Rooms { get; set; }
+
     }
 }

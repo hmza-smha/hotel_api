@@ -30,6 +30,12 @@ namespace hotel_api.Controllers
             return Ok(await _hotel.GetHotel(id));
         }
 
+        [HttpGet("{id}/AvailableRooms")]
+        public async Task<ActionResult<Hotel>> GetAvailableRooms(int id)
+        {
+            return Ok(await _hotel.GetAvailable(id));
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateHotel(int id, Hotel hotel)
         {

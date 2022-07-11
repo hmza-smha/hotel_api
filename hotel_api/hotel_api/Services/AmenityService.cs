@@ -40,12 +40,19 @@ namespace hotel_api.Services
 
         public async Task<Amenity> GetAmenity(int id)
         {
-            return await _context.Amenities.FindAsync(id);
+            return await _context.Amenities
+                .Where(a => a.Id == id)
+                .Include(x => x.RoomAmenities)
+                .ThenInclude(x => x.Room)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<List<Amenity>> GetAmenities()
         {
-            return await _context.Amenities.ToListAsync();
+            return await _context.Amenities
+                .Include(x => x.RoomAmenities)
+                .ThenInclude(x => x.Room)
+                .ToListAsync();
         }
 
         public async Task<Amenity> Update(int id, Amenity amenity)
@@ -56,7 +63,7 @@ namespace hotel_api.Services
             _context.Entry(amenity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
-            return await _context.Amenities.FindAsync(id);
+            return amenity;
         }
 
         private bool IsExist(int id)
