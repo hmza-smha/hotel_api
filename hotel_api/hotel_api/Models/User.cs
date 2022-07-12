@@ -4,9 +4,10 @@ namespace hotel_api.Models
 {
     public class User
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
 
         [Required]
+        [Key]
         public string Username { get; set; }
 
         [Required]

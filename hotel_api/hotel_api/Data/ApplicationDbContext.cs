@@ -33,6 +33,10 @@ namespace hotel_api.Data
                 x => new { x.RoomNumber, x.AmenityId, x.HotelId }
             );
 
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
             modelBuilder.Entity<Hotel>().HasData(
               new Hotel { Id = 1, Name = "Async Inn", City = "Amman", Country = "Jordan", Phone = "06-485236", Status = "Available" },
               new Hotel { Id = 2, Name = "Async Inn", City = "Irbid", Country = "Jordan", Phone = "06-485236", Status = "Closed" },

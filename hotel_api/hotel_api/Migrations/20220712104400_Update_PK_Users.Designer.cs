@@ -10,8 +10,8 @@ using hotel_api.Data;
 namespace hotel_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220711195232_Add_User_Table")]
-    partial class Add_User_Table
+    [Migration("20220712104400_Update_PK_Users")]
+    partial class Update_PK_Users
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -119,6 +119,12 @@ namespace hotel_api.Migrations
                     b.Property<int>("RoomNumber")
                         .HasColumnType("int");
 
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CustomerUsername")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Phone")
                         .HasColumnType("int");
 
@@ -132,6 +138,8 @@ namespace hotel_api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("HotelId", "RoomNumber");
+
+                    b.HasIndex("CustomerUsername");
 
                     b.ToTable("Rooms");
 
@@ -199,10 +207,8 @@ namespace hotel_api.Migrations
 
             modelBuilder.Entity("hotel_api.Models.User", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -214,22 +220,27 @@ namespace hotel_api.Migrations
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("Username");
 
-                    b.HasKey("Id");
+                    b.HasIndex("Username")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("hotel_api.Models.Room", b =>
                 {
+                    b.HasOne("hotel_api.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerUsername");
+
                     b.HasOne("hotel_api.Models.Hotel", "Hotel")
                         .WithMany("Rooms")
                         .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Hotel");
                 });

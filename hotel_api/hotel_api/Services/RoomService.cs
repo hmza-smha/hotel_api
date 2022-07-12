@@ -82,6 +82,7 @@ namespace hotel_api.Services
 
             return await _context.Rooms.FindAsync(hotelId, roomNumber);
         }
+
         public async Task RemoveAmenityFromRoom(int roomNumber, int hotelId, int amenityId)
         {
             RoomAmenity roomAmenity = await _context.RoomAmenities.FindAsync(hotelId, amenityId, roomNumber);
@@ -93,10 +94,43 @@ namespace hotel_api.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task BookRoom(int roomNumber, int hotelId, string CustomerUsername)
+        {
+            var room = await _context.Rooms.FindAsync(hotelId, roomNumber);
+
+            if (room == null)
+            {
+                throw new Exception("Room Does not Exist!");
+            }
+            else
+            {
+                room.CustomerUsername = CustomerUsername;
+                room.Status = "Booked By " + CustomerUsername;
+                _context.Entry(room).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task RemoveBook(int roomNumber, int hotelId)
+        {
+            var room = await _context.Rooms.FindAsync(hotelId, roomNumber);
+
+            if (room == null)
+            {
+                throw new Exception("Room Does not Exist!");
+            }
+            else
+            {
+                room.CustomerUsername = null;
+                room.Status = "Available";
+                _context.Entry(room).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+        }
+
         private bool IsExist(int roomNumber, int hotelId)
         {
             return _context.Rooms.Any(x => x.HotelId == hotelId && x.RoomNumber == roomNumber);
-        }
-
+        }        
     }
 }
