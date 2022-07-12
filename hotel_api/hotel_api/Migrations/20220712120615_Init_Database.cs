@@ -40,8 +40,6 @@ namespace hotel_api.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -49,7 +47,7 @@ namespace hotel_api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Username);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,7 +56,7 @@ namespace hotel_api.Migrations
                 {
                     HotelId = table.Column<int>(type: "int", nullable: false),
                     RoomNumber = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: true),
+                    CustomerUsername = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Rate = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Phone = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -74,10 +72,10 @@ namespace hotel_api.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Rooms_Users_CustomerId",
-                        column: x => x.CustomerId,
+                        name: "FK_Rooms_Users_CustomerUsername",
+                        column: x => x.CustomerUsername,
                         principalTable: "Users",
-                        principalColumn: "Id",
+                        principalColumn: "Username",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -128,8 +126,17 @@ namespace hotel_api.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Username", "Password", "Phone", "Role" },
+                values: new object[,]
+                {
+                    { "Admin", "123", "0786371281", "Admin" },
+                    { "HamZa", "123", "0786371281", "Customer" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Rooms",
-                columns: new[] { "HotelId", "RoomNumber", "CustomerId", "Phone", "Price", "Rate", "Status" },
+                columns: new[] { "HotelId", "RoomNumber", "CustomerUsername", "Phone", "Price", "Rate", "Status" },
                 values: new object[,]
                 {
                     { 1, 1, null, 123, null, null, null },
@@ -138,6 +145,19 @@ namespace hotel_api.Migrations
                     { 2, 1, null, 122, null, null, null },
                     { 3, 1, null, 124, null, null, null },
                     { 3, 2, null, 125, null, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RoomAmenities",
+                columns: new[] { "AmenityId", "HotelId", "RoomNumber", "Status" },
+                values: new object[,]
+                {
+                    { 1, 1, 1, null },
+                    { 2, 1, 1, null },
+                    { 3, 1, 1, null },
+                    { 1, 2, 1, null },
+                    { 2, 2, 1, null },
+                    { 1, 3, 1, null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -151,9 +171,9 @@ namespace hotel_api.Migrations
                 columns: new[] { "HotelId", "RoomNumber" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_CustomerId",
+                name: "IX_Rooms_CustomerUsername",
                 table: "Rooms",
-                column: "CustomerId");
+                column: "CustomerUsername");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Username",

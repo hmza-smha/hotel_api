@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using hotel_api.DTOs;
 
 namespace hotel_api.Services
 {
@@ -18,12 +19,22 @@ namespace hotel_api.Services
             _context = context;
         }
 
-        public async Task<Room> Create(Room room)
+        public async Task<CreateRoomDTO> Create(CreateRoomDTO room)
         {
-            if (IsExist(room.RoomNumber, room.HotelId))
+            if (IsExist(room.RoomNumber, room.HotelID))
                     throw new Exception("Simmilar Room Exists!");
 
-            _context.Entry(room).State = EntityState.Added;
+            Room new_room = new Room
+            {
+                HotelId = room.HotelID,
+                RoomNumber = room.RoomNumber,
+                Phone = room.Phone,
+                Status = room.Status,
+                Rate = room.Rate,
+                Price = room.Price
+            };
+
+            _context.Entry(new_room).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return room;
         }
@@ -38,30 +49,88 @@ namespace hotel_api.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Room> GetRoom(int roomNumber, int hotelId)
+        public async Task<GetRoomDTO> GetRoom(int roomNumber, int hotelId)
         {
             // PKs should be ordered as in the table
-            return await _context.Rooms.FindAsync(hotelId, roomNumber);
+            var room = await _context.Rooms
+                .Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber)
+                .Include(x => x.RoomAmenities)
+                .ThenInclude(x => x.Amenity)
+                .Include(x => x.Customer)
+                .Include(x => x.Hotel)
+                .SingleOrDefaultAsync();
+
+            if (room == null)
+                throw new Exception("Room Does not Exists!");
+
+            var roomDTO = new GetRoomDTO
+            {
+                RoomNumber = room.RoomNumber,
+                HotelName = room.Hotel.Name,
+                Phone = room.Phone,
+                Price = room.Price,
+                Rate = room.Rate,
+                Status = room.Status,
+                Amenities = room.RoomAmenities
+                    .Select(x => new GetAmenityDTO
+                    {
+                        Name = x.Amenity.Name,
+                    }).ToList()
+            };
+
+            if (room.Customer != null)
+                roomDTO.Customer = room.Customer.Username;
+
+            return roomDTO;
         }
 
-        public async Task<List<Room>> GetRooms(int hotelId)
+        public async Task<List<GetRoomDTO>> GetRooms(int hotelId)
         {
-            List<Room> rooms = await _context.Rooms.Where(x => x.HotelId == hotelId).ToListAsync();
-            return rooms;
+            return await _context.Rooms.Where(x => x.HotelId == hotelId)
+                .Include(x => x.RoomAmenities)
+                .ThenInclude(x => x.Amenity)
+                .Include(x=>x.Customer)
+                .Include(x => x.Hotel)
+                .Select(x => new GetRoomDTO
+                {
+                    RoomNumber = x.RoomNumber,
+                    HotelName = x.Hotel.Name,
+                    Customer = x.Customer.Username,
+                    Phone = x.Phone,
+                    Price = x.Price,
+                    Rate = x.Rate,
+                    Status = x.Status,
+                    Amenities = x.RoomAmenities
+                    .Select(x => new GetAmenityDTO
+                    {
+                        Name = x.Amenity.Name,
+                    }).ToList()
+
+                }).ToListAsync();
         }
 
-        public async Task<Room> Update(int roomNumber, int hotelId, Room room)
+        public async Task<PutRoomDTO> Update(int roomNumber, int hotelId, PutRoomDTO room)
         {
-            if (!IsExist(roomNumber, hotelId))
+            var roomInDb = await _context.Rooms
+                .Where(x => x.RoomNumber == roomNumber && x.HotelId == hotelId)
+                .SingleOrDefaultAsync();
+
+            if (roomInDb == null)
                 throw new Exception("Room Does not Exist!");
 
-            _context.Entry(room).State = EntityState.Modified;
+            roomInDb.RoomNumber = room.RoomNumber;
+            roomInDb.Phone = room.Phone;
+            roomInDb.Price = room.Price;
+            roomInDb.Rate = room.Rate;
+            roomInDb.Status = room.Status;
+
+            _context.Entry(roomInDb).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return room;
         }
 
-        public async Task<Room> AddAmenityToRoom(int roomNumber, int hotelId, int amenityId)
+        public async Task AddAmenityToRoom(int roomNumber, int hotelId, int amenityId)
         {
             if (!IsExist(roomNumber, hotelId))
                 throw new Exception("Room Does not Exist!");
@@ -79,8 +148,6 @@ namespace hotel_api.Services
             _context.Entry(roomAmenity).State = EntityState.Added;
 
             await _context.SaveChangesAsync();
-
-            return await _context.Rooms.FindAsync(hotelId, roomNumber);
         }
 
         public async Task RemoveAmenityFromRoom(int roomNumber, int hotelId, int amenityId)

@@ -1,4 +1,5 @@
-﻿using hotel_api.Models;
+﻿using hotel_api.DTOs;
+using hotel_api.Models;
 using hotel_api.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,28 +21,29 @@ namespace hotel_api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Amenity>>> GetAmenities()
+        public async Task<ActionResult<List<GetAmenityDTO>>> GetAmenities()
         {
             return Ok(await _amenity.GetAmenities());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Amenity>> GetAmenity(int id)
+        public async Task<ActionResult<GetAmenityDTO>> GetAmenity(int id)
         {
             return Ok(await _amenity.GetAmenity(id));
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAmenity(int id, Amenity amenity)
+        [HttpGet("{id}/Rooms/{hotelId}")]
+        public async Task<ActionResult<GetAmenityDTO>> GetRooms(int id, int hotelId)
         {
-            if (id != amenity.Id)
-            {
-                return BadRequest();
-            }
+            return Ok(await _amenity.GetRooms(id, hotelId));
+        }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAmenity(int id, CreateAmenityDTO amenity)
+        {
             try
             {
-                Amenity modifiedAmenity = await _amenity.Update(id, amenity);
+                CreateAmenityDTO modifiedAmenity = await _amenity.Update(id, amenity);
                 return Ok(modifiedAmenity);
             }
             catch (Exception e)
@@ -51,11 +53,11 @@ namespace hotel_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Amenity>> CreateHotel(Amenity amenity)
+        public async Task<ActionResult<GetAmenityDTO>> CreateHotel(CreateAmenityDTO amenity)
         {
             try
             {
-                Amenity newAmenity = await _amenity.Create(amenity);
+                CreateAmenityDTO newAmenity = await _amenity.Create(amenity);
                 return Ok(newAmenity);
             }
             catch (Exception e)

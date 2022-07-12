@@ -1,4 +1,5 @@
-﻿using hotel_api.Models;
+﻿using hotel_api.DTOs;
+using hotel_api.Models;
 using hotel_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -19,34 +20,34 @@ namespace hotel_api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Hotel>>> GetHotels()
+        public async Task<ActionResult<List<GetHotelDTO>>> GetHotels()
         {
             return Ok(await _hotel.GetHotels());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> GetHotel(int id)
+        public async Task<ActionResult<GetHotelDTO>> GetHotel(int id)
         {
             return Ok(await _hotel.GetHotel(id));
         }
 
         [HttpGet("{id}/AvailableRooms")]
-        public async Task<ActionResult<Hotel>> GetAvailableRooms(int id)
+        public async Task<ActionResult<GetRoomDTO>> GetAvailableRooms(int id)
         {
             return Ok(await _hotel.GetAvailable(id));
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateHotel(int id, Hotel hotel)
+        public async Task<IActionResult> UpdateHotel(int id, CreateHotelDTO hotel)
         {
-            if (id != hotel.Id)
-            {
-                return BadRequest();
-            }
+            //if (id != hotel.Id)
+            //{
+            //    return BadRequest();
+            //}
 
             try
             {
-                Hotel modifiedHotel = await _hotel.Update(id, hotel);
+                CreateHotelDTO modifiedHotel = await _hotel.Update(id, hotel);
                 return Ok(modifiedHotel);
             }
             catch(Exception e)
@@ -56,11 +57,11 @@ namespace hotel_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Hotel>> CreateHotel(Hotel hotel)
+        public async Task<ActionResult<CreateHotelDTO>> CreateHotel(CreateHotelDTO hotel)
         {
             try
             {
-                Hotel newHotel = await _hotel.Create(hotel);
+                CreateHotelDTO newHotel = await _hotel.Create(hotel);
                 return Ok(newHotel);
             }
             catch (Exception e)

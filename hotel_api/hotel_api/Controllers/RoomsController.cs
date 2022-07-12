@@ -1,4 +1,5 @@
-﻿using hotel_api.Models;
+﻿using hotel_api.DTOs;
+using hotel_api.Models;
 using hotel_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -21,27 +22,27 @@ namespace hotel_api.Controllers
         }
 
         [HttpGet("{hotelId}")]
-        public async Task<ActionResult<List<Room>>> GetRooms(int hotelId)
+        public async Task<ActionResult<List<GetRoomDTO>>> GetRooms(int hotelId)
         {
             return Ok(await _room.GetRooms(hotelId));
         }
 
         [HttpGet("{roomNumber}/Hotel/{hotelId}")]
-        public async Task<ActionResult<Room>> GetRoom(int roomNumber, int hotelId)
+        public async Task<ActionResult<GetRoomDTO>> GetRoom(int roomNumber, int hotelId)
         {
             return Ok(await _room.GetRoom(roomNumber, hotelId));
         }
 
         [HttpPut("{roomNumber}/Hotel/{hotelId}")]
-        public async Task<IActionResult> UpdateRoom(int roomNumber, int hotelId, Room room)
+        public async Task<IActionResult> UpdateRoom(int roomNumber, int hotelId, PutRoomDTO room)
         {
-            if (hotelId != room.HotelId && roomNumber != room.RoomNumber)
+            if (roomNumber != room.RoomNumber)
             {
                 return BadRequest();
             }
             try
             {
-                var modifiedHotel = await _room.Update(hotelId, roomNumber, room);
+                var modifiedHotel = await _room.Update(roomNumber, hotelId, room);
                 return Ok(modifiedHotel);
             }
             catch(Exception e)
@@ -52,11 +53,11 @@ namespace hotel_api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Room>> CreateRoom(Room room)
+        public async Task<ActionResult<CreateRoomDTO>> CreateRoom(CreateRoomDTO room)
         {
             try
             {
-                Room newRoom = await _room.Create(room);
+                CreateRoomDTO newRoom = await _room.Create(room);
                 return Ok(newRoom);
             }
             catch( Exception e)
