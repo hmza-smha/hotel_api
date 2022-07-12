@@ -10,8 +10,8 @@ using hotel_api.Data;
 namespace hotel_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220711182747_Init_Database")]
-    partial class Init_Database
+    [Migration("20220712104638_Update_Rooms_User_FK")]
+    partial class Update_Rooms_User_FK
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -119,6 +119,9 @@ namespace hotel_api.Migrations
                     b.Property<int>("RoomNumber")
                         .HasColumnType("int");
 
+                    b.Property<string>("CustomerId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("Phone")
                         .HasColumnType("int");
 
@@ -132,6 +135,8 @@ namespace hotel_api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("HotelId", "RoomNumber");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Rooms");
 
@@ -197,13 +202,42 @@ namespace hotel_api.Migrations
                     b.ToTable("RoomAmenities");
                 });
 
+            modelBuilder.Entity("hotel_api.Models.User", b =>
+                {
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Username");
+
+                    b.HasIndex("Username")
+                        .IsUnique();
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("hotel_api.Models.Room", b =>
                 {
+                    b.HasOne("hotel_api.Models.User", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
                     b.HasOne("hotel_api.Models.Hotel", "Hotel")
                         .WithMany("Rooms")
                         .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Customer");
 
                     b.Navigation("Hotel");
                 });

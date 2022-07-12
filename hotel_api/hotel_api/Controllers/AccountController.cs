@@ -1,9 +1,7 @@
-﻿
-using hotel_api.Data;
+﻿using hotel_api.Data;
 using hotel_api.DTOs;
 using hotel_api.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

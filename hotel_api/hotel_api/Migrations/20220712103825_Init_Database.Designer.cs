@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using hotel_api.Data;
 
 namespace hotel_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220712103825_Init_Database")]
+    partial class Init_Database
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -117,8 +119,8 @@ namespace hotel_api.Migrations
                     b.Property<int>("RoomNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("CustomerUsername")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Phone")
                         .HasColumnType("int");
@@ -134,7 +136,7 @@ namespace hotel_api.Migrations
 
                     b.HasKey("HotelId", "RoomNumber");
 
-                    b.HasIndex("CustomerUsername");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Rooms");
 
@@ -202,8 +204,10 @@ namespace hotel_api.Migrations
 
             modelBuilder.Entity("hotel_api.Models.User", b =>
                 {
-                    b.Property<string>("Username")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -215,7 +219,11 @@ namespace hotel_api.Migrations
                     b.Property<string>("Role")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Username");
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("Username")
                         .IsUnique();
@@ -227,7 +235,7 @@ namespace hotel_api.Migrations
                 {
                     b.HasOne("hotel_api.Models.User", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerUsername");
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("hotel_api.Models.Hotel", "Hotel")
                         .WithMany("Rooms")

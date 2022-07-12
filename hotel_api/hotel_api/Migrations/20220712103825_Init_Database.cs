@@ -37,11 +37,28 @@ namespace hotel_api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Rooms",
                 columns: table => new
                 {
                     HotelId = table.Column<int>(type: "int", nullable: false),
                     RoomNumber = table.Column<int>(type: "int", nullable: false),
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
                     Rate = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
                     Phone = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -56,6 +73,12 @@ namespace hotel_api.Migrations
                         principalTable: "Hotels",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Rooms_Users_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,15 +129,15 @@ namespace hotel_api.Migrations
 
             migrationBuilder.InsertData(
                 table: "Rooms",
-                columns: new[] { "HotelId", "RoomNumber", "Phone", "Price", "Rate", "Status" },
+                columns: new[] { "HotelId", "RoomNumber", "CustomerId", "Phone", "Price", "Rate", "Status" },
                 values: new object[,]
                 {
-                    { 1, 1, 123, null, null, null },
-                    { 1, 2, 124, null, null, null },
-                    { 1, 3, 125, null, null, null },
-                    { 2, 1, 122, null, null, null },
-                    { 3, 1, 124, null, null, null },
-                    { 3, 2, 125, null, null, null }
+                    { 1, 1, null, 123, null, null, null },
+                    { 1, 2, null, 124, null, null, null },
+                    { 1, 3, null, 125, null, null, null },
+                    { 2, 1, null, 122, null, null, null },
+                    { 3, 1, null, 124, null, null, null },
+                    { 3, 2, null, 125, null, null, null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -126,6 +149,17 @@ namespace hotel_api.Migrations
                 name: "IX_RoomAmenities_HotelId_RoomNumber",
                 table: "RoomAmenities",
                 columns: new[] { "HotelId", "RoomNumber" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Rooms_CustomerId",
+                table: "Rooms",
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_Username",
+                table: "Users",
+                column: "Username",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -141,6 +175,9 @@ namespace hotel_api.Migrations
 
             migrationBuilder.DropTable(
                 name: "Hotels");
+
+            migrationBuilder.DropTable(
+                name: "Users");
         }
     }
 }

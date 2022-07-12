@@ -106,5 +106,17 @@ namespace hotel_api.Controllers
                 return Content(e.Message);
             }
         }
+
+        [HttpPut("{roomNumber}/{hotelId}/Customer/{customerUsername}")]
+        public async Task BookRoom(int roomNumber, int hotelId, string customerUsername)
+        {
+            await _room.BookRoom(roomNumber, hotelId, customerUsername);
+        }
+
+        [HttpPut("{roomNumber}/{hotelId}")]
+        public async Task RemoveBook(int roomNumber, int hotelId)
+        {
+            await _room.RemoveBook(roomNumber, hotelId);
+        }
     }
 }
