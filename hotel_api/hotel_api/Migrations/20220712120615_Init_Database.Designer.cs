@@ -10,8 +10,8 @@ using hotel_api.Data;
 namespace hotel_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220712104638_Update_Rooms_User_FK")]
-    partial class Update_Rooms_User_FK
+    [Migration("20220712120615_Init_Database")]
+    partial class Init_Database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -119,7 +119,7 @@ namespace hotel_api.Migrations
                     b.Property<int>("RoomNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("CustomerId")
+                    b.Property<string>("CustomerUsername")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Phone")
@@ -136,7 +136,7 @@ namespace hotel_api.Migrations
 
                     b.HasKey("HotelId", "RoomNumber");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("CustomerUsername");
 
                     b.ToTable("Rooms");
 
@@ -200,6 +200,44 @@ namespace hotel_api.Migrations
                     b.HasIndex("HotelId", "RoomNumber");
 
                     b.ToTable("RoomAmenities");
+
+                    b.HasData(
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 1,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 2,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 3,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 1,
+                            HotelId = 2
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 2,
+                            HotelId = 2
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 1,
+                            HotelId = 3
+                        });
                 });
 
             modelBuilder.Entity("hotel_api.Models.User", b =>
@@ -223,13 +261,29 @@ namespace hotel_api.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Username = "Admin",
+                            Password = "123",
+                            Phone = "0786371281",
+                            Role = "Admin"
+                        },
+                        new
+                        {
+                            Username = "HamZa",
+                            Password = "123",
+                            Phone = "0786371281",
+                            Role = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("hotel_api.Models.Room", b =>
                 {
                     b.HasOne("hotel_api.Models.User", "Customer")
                         .WithMany()
-                        .HasForeignKey("CustomerId");
+                        .HasForeignKey("CustomerUsername");
 
                     b.HasOne("hotel_api.Models.Hotel", "Hotel")
                         .WithMany("Rooms")

@@ -58,39 +58,19 @@ namespace hotel_api.Data
                 new Amenity { Id = 3, Name = "Ocean View" }
             );
 
+            modelBuilder.Entity<RoomAmenity>().HasData(
+                new RoomAmenity { HotelId = 1, RoomNumber = 1, AmenityId = 1 },
+                new RoomAmenity { HotelId = 1, RoomNumber = 1, AmenityId = 2 },
+                new RoomAmenity { HotelId = 1, RoomNumber = 1, AmenityId = 3 },
+                new RoomAmenity { HotelId = 2, RoomNumber = 1, AmenityId = 1 },
+                new RoomAmenity { HotelId = 2, RoomNumber = 1, AmenityId = 2 },
+                new RoomAmenity { HotelId = 3, RoomNumber = 1, AmenityId = 1 }
+            );
 
-            //// any unique string id
-            //const string ADMIN_ID = "a18be9c0";
-            //const string ADMIN_ROLE_ID = "ad376a8f";
-
-            //// create an Admin role
-            //modelBuilder.Entity<IdentityRole>().HasData(new IdentityRole
-            //{
-            //    Id = ADMIN_ROLE_ID,
-            //    Name = "Admin",
-            //    NormalizedName = "Admin"
-            //});
-
-            //// create a User
-            //var hasher = new PasswordHasher<ApplicationUser>();
-            //modelBuilder.Entity<ApplicationUser>().HasData(new ApplicationUser
-            //{
-            //    Id = ADMIN_ID,
-            //    UserName = "Admin",
-            //    NormalizedUserName = "admin",
-            //    Email = "admin@gmail.com",
-            //    NormalizedEmail = "admin@gmail.com",
-            //    EmailConfirmed = false,
-            //    PasswordHash = hasher.HashPassword(null, "Admin123#"),
-            //    SecurityStamp = string.Empty
-            //});
-
-            //// assign that user to the admin role
-            //modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
-            //{
-            //    RoleId = ADMIN_ROLE_ID,
-            //    UserId = ADMIN_ID
-            //});
+            modelBuilder.Entity<User>().HasData(
+                new User { Username = "Admin", Password = "123", Phone = "0786371281", Role = "Admin" },
+                new User { Username = "HamZa", Password = "123", Phone = "0786371281", Role = "Customer" }
+            );
 
         }
     }

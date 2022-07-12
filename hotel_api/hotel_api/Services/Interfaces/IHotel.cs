@@ -1,4 +1,5 @@
-﻿using hotel_api.Models;
+﻿using hotel_api.DTOs;
+using hotel_api.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,16 +7,16 @@ namespace hotel_api.Services.Interfaces
 {
     public interface IHotel
     {
-        Task<Hotel> Create(Hotel hotel);
+        Task<CreateHotelDTO> Create(CreateHotelDTO hotel);
 
-        Task<Hotel> Update(int id, Hotel hotel);
+        Task<CreateHotelDTO> Update(int id, CreateHotelDTO hotel);
 
         Task Delete(int id);
 
-        Task<List<Hotel>> GetHotels();
+        Task<List<GetHotelDTO>> GetHotels();
 
-        Task<Hotel> GetHotel(int id);
+        Task<GetHotelDTO> GetHotel(int id);
 
-        Task<List<Room>> GetAvailable(int id);
+        Task<List<GetRoomDTO>> GetAvailable(int id);
     }
 }

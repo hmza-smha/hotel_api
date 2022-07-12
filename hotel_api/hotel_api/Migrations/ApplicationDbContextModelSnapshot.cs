@@ -198,6 +198,44 @@ namespace hotel_api.Migrations
                     b.HasIndex("HotelId", "RoomNumber");
 
                     b.ToTable("RoomAmenities");
+
+                    b.HasData(
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 1,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 2,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 3,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 1,
+                            HotelId = 2
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 2,
+                            HotelId = 2
+                        },
+                        new
+                        {
+                            RoomNumber = 1,
+                            AmenityId = 1,
+                            HotelId = 3
+                        });
                 });
 
             modelBuilder.Entity("hotel_api.Models.User", b =>
@@ -221,6 +259,22 @@ namespace hotel_api.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Username = "Admin",
+                            Password = "123",
+                            Phone = "0786371281",
+                            Role = "Admin"
+                        },
+                        new
+                        {
+                            Username = "HamZa",
+                            Password = "123",
+                            Phone = "0786371281",
+                            Role = "Customer"
+                        });
                 });
 
             modelBuilder.Entity("hotel_api.Models.Room", b =>
