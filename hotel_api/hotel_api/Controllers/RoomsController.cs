@@ -1,12 +1,10 @@
 ﻿using hotel_api.DTOs;
-using hotel_api.Models;
 using hotel_api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace hotel_api.Controllers
 {
@@ -30,7 +28,15 @@ namespace hotel_api.Controllers
         [HttpGet("{roomNumber}/Hotel/{hotelId}")]
         public async Task<ActionResult<GetRoomDTO>> GetRoom(int roomNumber, int hotelId)
         {
-            return Ok(await _room.GetRoom(roomNumber, hotelId));
+            try
+            {
+                return Ok(await _room.GetRoom(roomNumber, hotelId));
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+            
         }
 
         [HttpPut("{roomNumber}/Hotel/{hotelId}")]
@@ -85,7 +91,7 @@ namespace hotel_api.Controllers
         {
             try
             {
-                await _room.RemoveAmenityFromRoom(roomNumber, hotelId, amenityId);
+                await _room.RemoveAmenityFromRoom(hotelId, roomNumber,  amenityId);
                 return Ok();
             }
             catch (Exception e)

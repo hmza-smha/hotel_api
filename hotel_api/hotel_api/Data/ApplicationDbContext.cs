@@ -38,18 +38,22 @@ namespace hotel_api.Data
                 .IsUnique();
 
             modelBuilder.Entity<Hotel>().HasData(
-              new Hotel { Id = 1, Name = "Async Inn", City = "Amman", Country = "Jordan", Phone = "06-485236", Status = "Available" },
-              new Hotel { Id = 2, Name = "Async Inn", City = "Irbid", Country = "Jordan", Phone = "06-485236", Status = "Closed" },
-              new Hotel { Id = 3, Name = "Async Inn", City = "Aqaba", Country = "Jordan", Phone = "06-485236", Status = "Available" }
+              new Hotel { Id = 1, Name = "amman-hotel", City = "Amman", Country = "Jordan", Phone = "06-485236", Status = "Available" },
+              new Hotel { Id = 2, Name = "irbid-hotel", City = "Irbid", Country = "Jordan", Phone = "06-485236", Status = "Closed" },
+              new Hotel { Id = 3, Name = "aqaba-hotel", City = "Aqaba", Country = "Jordan", Phone = "06-485236", Status = "Available" }
             );
 
             modelBuilder.Entity<Room>().HasData(
-                new Room { HotelId = 1,  RoomNumber = 1, Phone = 123},
-                new Room { HotelId = 1,  RoomNumber = 2, Phone = 124},
-                new Room { HotelId = 1,  RoomNumber = 3, Phone = 125},
-                new Room { HotelId = 2, RoomNumber = 1, Phone = 122 },
-                new Room { HotelId = 3, RoomNumber = 1, Phone = 124 },
-                new Room { HotelId = 3, RoomNumber = 2, Phone = 125 }
+                new Room { HotelId = 1,  RoomNumber = 1, Phone = 123, CustomerUsername = "HamZa", Price = 15, Rate = 5, Status = "Booked By HamZa" },
+                new Room { HotelId = 1,  RoomNumber = 2, Phone = 124, CustomerUsername = "Admin", Price = 20, Rate = 4, Status = "Booked By Admin" },
+                new Room { HotelId = 1,  RoomNumber = 3, Phone = 125, Price = 15, Rate = 5, Status = "Available"},
+                new Room { HotelId = 1,  RoomNumber = 4, Phone = 512, Price = 10, Rate = 4, Status = "Available"},
+                new Room { HotelId = 2, RoomNumber = 1, Phone = 124,  Price = 30, Rate = 4, Status = "Available" },
+                new Room { HotelId = 2, RoomNumber = 2, Phone = 122,  Price = 15, Rate = 4, Status = "Available" },
+                new Room { HotelId = 2, RoomNumber = 3, Phone = 231,  Price = 10, Rate = 4, Status = "Available" },
+                new Room { HotelId = 3, RoomNumber = 1, Phone = 124, Price = 20, Rate = 5, Status = "Available" },
+                new Room { HotelId = 3, RoomNumber = 3, Phone = 145, Price = 20, Rate = 5, Status = "Available" },
+                new Room { HotelId = 3, RoomNumber = 2, Phone = 125, CustomerUsername = "HamZa", Price = 15, Rate = 5, Status = "Booked By HamZa" }
             );
 
             modelBuilder.Entity<Amenity>().HasData(
@@ -62,8 +66,24 @@ namespace hotel_api.Data
                 new RoomAmenity { HotelId = 1, RoomNumber = 1, AmenityId = 1 },
                 new RoomAmenity { HotelId = 1, RoomNumber = 1, AmenityId = 2 },
                 new RoomAmenity { HotelId = 1, RoomNumber = 1, AmenityId = 3 },
+
+                new RoomAmenity { HotelId = 1, RoomNumber = 2, AmenityId = 3 },
+                new RoomAmenity { HotelId = 1, RoomNumber = 2, AmenityId = 2 },
+
+
+                new RoomAmenity { HotelId = 1, RoomNumber = 3, AmenityId = 1 },
+                new RoomAmenity { HotelId = 1, RoomNumber = 3, AmenityId = 2 },
+
+
+                new RoomAmenity { HotelId = 1, RoomNumber = 4, AmenityId = 1 },
+
                 new RoomAmenity { HotelId = 2, RoomNumber = 1, AmenityId = 1 },
                 new RoomAmenity { HotelId = 2, RoomNumber = 1, AmenityId = 2 },
+
+
+                new RoomAmenity { HotelId = 2, RoomNumber = 2, AmenityId = 3 },
+                new RoomAmenity { HotelId = 2, RoomNumber = 2, AmenityId = 2 },
+
                 new RoomAmenity { HotelId = 3, RoomNumber = 1, AmenityId = 1 }
             );
 

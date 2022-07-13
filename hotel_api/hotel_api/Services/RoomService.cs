@@ -74,6 +74,7 @@ namespace hotel_api.Services
                 Amenities = room.RoomAmenities
                     .Select(x => new GetAmenityDTO
                     {
+                        Id = x.AmenityId,
                         Name = x.Amenity.Name,
                     }).ToList()
             };
@@ -103,6 +104,7 @@ namespace hotel_api.Services
                     Amenities = x.RoomAmenities
                     .Select(x => new GetAmenityDTO
                     {
+                        Id = x.AmenityId,
                         Name = x.Amenity.Name,
                     }).ToList()
 
@@ -138,6 +140,9 @@ namespace hotel_api.Services
             if (!_context.Amenities.Any(x => x.Id == amenityId))
                 throw new Exception("Amenity Does not Exist!");
 
+            if (_context.RoomAmenities.Any(x => x.RoomNumber == roomNumber && x.HotelId == hotelId && x.AmenityId == amenityId))
+                throw new Exception("Similar Amenity Exists!");
+
             var roomAmenity = new RoomAmenity
             {
                 HotelId = hotelId,
@@ -150,9 +155,11 @@ namespace hotel_api.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveAmenityFromRoom(int roomNumber, int hotelId, int amenityId)
+        public async Task RemoveAmenityFromRoom(int hotelId, int roomNumber,  int amenityId)
         {
-            RoomAmenity roomAmenity = await _context.RoomAmenities.FindAsync(hotelId, amenityId, roomNumber);
+            var roomAmenity = await _context.RoomAmenities
+                .Where(x => x.HotelId == hotelId && x.RoomNumber == roomNumber && x.AmenityId == amenityId)
+                .FirstOrDefaultAsync();
 
             if (roomAmenity == null)
                 throw new Exception("Amenity Does not Exists!");

@@ -28,7 +28,15 @@ namespace hotel_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetHotelDTO>> GetHotel(int id)
         {
-            return Ok(await _hotel.GetHotel(id));
+            try
+            {
+                return Ok(await _hotel.GetHotel(id));
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
+            
         }
 
         [HttpGet("{id}/AvailableRooms")]

@@ -10,7 +10,7 @@ using hotel_api.Data;
 namespace hotel_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220712120615_Init_Database")]
+    [Migration("20220713124906_Init_Database")]
     partial class Init_Database
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,7 +87,7 @@ namespace hotel_api.Migrations
                             Id = 1,
                             City = "Amman",
                             Country = "Jordan",
-                            Name = "Async Inn",
+                            Name = "amman-hotel",
                             Phone = "06-485236",
                             Status = "Available"
                         },
@@ -96,7 +96,7 @@ namespace hotel_api.Migrations
                             Id = 2,
                             City = "Irbid",
                             Country = "Jordan",
-                            Name = "Async Inn",
+                            Name = "irbid-hotel",
                             Phone = "06-485236",
                             Status = "Closed"
                         },
@@ -105,7 +105,7 @@ namespace hotel_api.Migrations
                             Id = 3,
                             City = "Aqaba",
                             Country = "Jordan",
-                            Name = "Async Inn",
+                            Name = "aqaba-hotel",
                             Phone = "06-485236",
                             Status = "Available"
                         });
@@ -145,37 +145,94 @@ namespace hotel_api.Migrations
                         {
                             HotelId = 1,
                             RoomNumber = 1,
-                            Phone = 123
+                            CustomerUsername = "HamZa",
+                            Phone = 123,
+                            Price = 15m,
+                            Rate = 5m,
+                            Status = "Booked By HamZa"
                         },
                         new
                         {
                             HotelId = 1,
                             RoomNumber = 2,
-                            Phone = 124
+                            CustomerUsername = "Admin",
+                            Phone = 124,
+                            Price = 20m,
+                            Rate = 4m,
+                            Status = "Booked By Admin"
                         },
                         new
                         {
                             HotelId = 1,
                             RoomNumber = 3,
-                            Phone = 125
+                            Phone = 125,
+                            Price = 15m,
+                            Rate = 5m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            HotelId = 1,
+                            RoomNumber = 4,
+                            Phone = 512,
+                            Price = 10m,
+                            Rate = 4m,
+                            Status = "Available"
                         },
                         new
                         {
                             HotelId = 2,
                             RoomNumber = 1,
-                            Phone = 122
+                            Phone = 124,
+                            Price = 30m,
+                            Rate = 4m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            HotelId = 2,
+                            RoomNumber = 2,
+                            Phone = 122,
+                            Price = 15m,
+                            Rate = 4m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            HotelId = 2,
+                            RoomNumber = 3,
+                            Phone = 231,
+                            Price = 10m,
+                            Rate = 4m,
+                            Status = "Available"
                         },
                         new
                         {
                             HotelId = 3,
                             RoomNumber = 1,
-                            Phone = 124
+                            Phone = 124,
+                            Price = 20m,
+                            Rate = 5m,
+                            Status = "Available"
+                        },
+                        new
+                        {
+                            HotelId = 3,
+                            RoomNumber = 3,
+                            Phone = 145,
+                            Price = 20m,
+                            Rate = 5m,
+                            Status = "Available"
                         },
                         new
                         {
                             HotelId = 3,
                             RoomNumber = 2,
-                            Phone = 125
+                            CustomerUsername = "HamZa",
+                            Phone = 125,
+                            Price = 15m,
+                            Rate = 5m,
+                            Status = "Booked By HamZa"
                         });
                 });
 
@@ -222,6 +279,36 @@ namespace hotel_api.Migrations
                         },
                         new
                         {
+                            RoomNumber = 2,
+                            AmenityId = 3,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 2,
+                            AmenityId = 2,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 3,
+                            AmenityId = 1,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 3,
+                            AmenityId = 2,
+                            HotelId = 1
+                        },
+                        new
+                        {
+                            RoomNumber = 4,
+                            AmenityId = 1,
+                            HotelId = 1
+                        },
+                        new
+                        {
                             RoomNumber = 1,
                             AmenityId = 1,
                             HotelId = 2
@@ -229,6 +316,18 @@ namespace hotel_api.Migrations
                         new
                         {
                             RoomNumber = 1,
+                            AmenityId = 2,
+                            HotelId = 2
+                        },
+                        new
+                        {
+                            RoomNumber = 2,
+                            AmenityId = 3,
+                            HotelId = 2
+                        },
+                        new
+                        {
+                            RoomNumber = 2,
                             AmenityId = 2,
                             HotelId = 2
                         },

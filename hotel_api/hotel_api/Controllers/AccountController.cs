@@ -29,13 +29,23 @@ namespace hotel_api.Controllers
             _context = context;
         }
 
-        [HttpGet("Admins")]
-        [Authorize(Roles = "Admin")]
-        public IActionResult AdminsEndpoints()
+        [HttpGet("User/{username}")]
+        public async Task<IActionResult> GetUser(string username)
         {
-            var curUser = GetCurrentUser();
+            var user = await _context.Users
+                .Where(x => x.Username == username)
+                .SingleOrDefaultAsync();
 
-            return Ok($"Hi {curUser.Username}, you are {curUser.Role}");
+            if (user == null)
+                return NotFound();
+            else
+                return Ok(user);
+
+            //var curUser = GetCurrentUser();
+
+            //if (curUser == null) return BadRequest();
+
+            //return Ok($"Hi {curUser.Username}, you are {curUser.Role}");
         }
 
         [HttpPost("Register")]
@@ -82,10 +92,6 @@ namespace hotel_api.Controllers
 
         private User Authenticate(LoginData userLogin)
         {
-            //var currentUser = UserConstants.Users
-            //    .FirstOrDefault(o => o.Username.ToLower() == userLogin.Username.ToLower() && o.Password == userLogin.Password);
-
-
             User currentUser = _context.Users
                 .Where(x => x.Username == userLogin.Username && x.Password == userLogin.Password)
                 .FirstOrDefault();
@@ -100,11 +106,7 @@ namespace hotel_api.Controllers
 
         private User GetCurrentUser()
         {
-            //string username = HttpContext.User.Identity.Name;
-
-            //return _context.Users.Where(x => x.Username == username).FirstOrDefault();
-
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            ClaimsIdentity identity = HttpContext.User.Identity as ClaimsIdentity;
 
             if (identity != null)
             {
