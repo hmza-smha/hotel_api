@@ -120,9 +120,9 @@ namespace hotel_api.Migrations
                 columns: new[] { "Id", "City", "Country", "Name", "Phone", "Status" },
                 values: new object[,]
                 {
-                    { 1, "Amman", "Jordan", "Async Inn", "06-485236", "Available" },
-                    { 2, "Irbid", "Jordan", "Async Inn", "06-485236", "Closed" },
-                    { 3, "Aqaba", "Jordan", "Async Inn", "06-485236", "Available" }
+                    { 1, "Amman", "Jordan", "amman-hotel", "06-485236", "Available" },
+                    { 2, "Irbid", "Jordan", "irbid-hotel", "06-485236", "Closed" },
+                    { 3, "Aqaba", "Jordan", "aqaba-hotel", "06-485236", "Available" }
                 });
 
             migrationBuilder.InsertData(
@@ -139,12 +139,16 @@ namespace hotel_api.Migrations
                 columns: new[] { "HotelId", "RoomNumber", "CustomerUsername", "Phone", "Price", "Rate", "Status" },
                 values: new object[,]
                 {
-                    { 1, 1, null, 123, null, null, null },
-                    { 1, 2, null, 124, null, null, null },
-                    { 1, 3, null, 125, null, null, null },
-                    { 2, 1, null, 122, null, null, null },
-                    { 3, 1, null, 124, null, null, null },
-                    { 3, 2, null, 125, null, null, null }
+                    { 1, 3, null, 125, 15m, 5m, "Available" },
+                    { 1, 4, null, 512, 10m, 4m, "Available" },
+                    { 2, 1, null, 124, 30m, 4m, "Available" },
+                    { 2, 2, null, 122, 15m, 4m, "Available" },
+                    { 2, 3, null, 231, 10m, 4m, "Available" },
+                    { 3, 1, null, 124, 20m, 5m, "Available" },
+                    { 3, 3, null, 145, 20m, 5m, "Available" },
+                    { 1, 2, "Admin", 124, 20m, 4m, "Booked By Admin" },
+                    { 1, 1, "HamZa", 123, 15m, 5m, "Booked By HamZa" },
+                    { 3, 2, "HamZa", 125, 15m, 5m, "Booked By HamZa" }
                 });
 
             migrationBuilder.InsertData(
@@ -152,12 +156,19 @@ namespace hotel_api.Migrations
                 columns: new[] { "AmenityId", "HotelId", "RoomNumber", "Status" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, null },
-                    { 2, 1, 1, null },
-                    { 3, 1, 1, null },
+                    { 1, 1, 3, null },
+                    { 2, 1, 3, null },
+                    { 1, 1, 4, null },
                     { 1, 2, 1, null },
                     { 2, 2, 1, null },
-                    { 1, 3, 1, null }
+                    { 3, 2, 2, null },
+                    { 2, 2, 2, null },
+                    { 1, 3, 1, null },
+                    { 3, 1, 2, null },
+                    { 2, 1, 2, null },
+                    { 1, 1, 1, null },
+                    { 2, 1, 1, null },
+                    { 3, 1, 1, null }
                 });
 
             migrationBuilder.CreateIndex(

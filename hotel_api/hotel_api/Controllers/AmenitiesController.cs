@@ -29,7 +29,14 @@ namespace hotel_api.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<GetAmenityDTO>> GetAmenity(int id)
         {
-            return Ok(await _amenity.GetAmenity(id));
+            try
+            {
+                return Ok(await _amenity.GetAmenity(id));
+            }
+            catch (Exception ex)
+            {
+                return Content(ex.Message);
+            }
         }
 
         [HttpGet("{id}/Rooms/{hotelId}")]

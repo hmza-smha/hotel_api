@@ -56,6 +56,9 @@ namespace hotel_api.Services
                 .ThenInclude(x => x.Hotel)
                 .FirstOrDefaultAsync();
 
+            if (amenity == null)
+                throw new Exception("Amenity Does not exists!");
+
             return new GetAmenityDTO
             {
                 Id = id,
@@ -118,10 +121,13 @@ namespace hotel_api.Services
 
         public async Task<CreateAmenityDTO> Update(int id, CreateAmenityDTO amenity)
         {
-            if (!IsExist(id))
+
+            var amenityInDb = await _context.Amenities.FindAsync(id);
+            if(amenityInDb == null)
                 throw new Exception("Amenity Does not Exist!");
 
-            _context.Entry(amenity).State = EntityState.Modified;
+            amenityInDb.Name = amenity.Name;
+            _context.Entry(amenityInDb).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return amenity;
@@ -145,7 +151,6 @@ namespace hotel_api.Services
                 {
                     RoomNumber = x.RoomNumber,
                     HotelName = x.Room.Hotel.Name,
-                    //Customer = x.Room.Customer.Username,
                     Customer = x.Room.CustomerUsername,
                     Phone = x.Room.Phone,
                     Price = x.Room.Price,
