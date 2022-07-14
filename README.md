@@ -4,6 +4,10 @@ Building a ```RESTful API``` hotel server that will increase the managmement of 
 
 *Note: This project has ```JWT``` authentication, and contains ```swagger``` page as first page.*
 
+## Live Demonstration on Azure
+
+The API demo can be viewed online [HERE](https://hotelmgtapi.azurewebsites.net/swagger/index.html)
+
 <br>
 
 ## Table of content
